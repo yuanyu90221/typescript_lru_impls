@@ -12,9 +12,13 @@ export default class List{
   private FindTarget(ele: &(Node<Pair>)): &(Node<Pair>) {
     let frontSearch = this.head;
     let backSearch = this.tail;
-    while(frontSearch.equals(ele) === false && backSearch.equals(ele) === false) {
-      frontSearch = frontSearch.next;
-      backSearch = backSearch.next;
+    while(ele.equals(frontSearch) === false && ele.equals(backSearch) === false) {
+      if (frontSearch !== null) {
+        frontSearch = frontSearch.next;
+      }
+      if (backSearch !== null) {
+        backSearch = backSearch.next;
+      }
     }
     return (frontSearch !== null)? frontSearch : backSearch;
   }

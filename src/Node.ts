@@ -9,6 +9,7 @@ export default class Node<T extends Comparable<T>> implements Comparable<Node<T>
     this.next = next;
   }
   equals(compareObj: &Node<T>): boolean {
+    if (compareObj === null) return false;
     return this.value.equals(compareObj.value);
   }
 }
