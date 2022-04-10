@@ -44,6 +44,50 @@ case 2: 存取值某個 key 時
 
 如果 key 存在則把 元素 key value 放到最前面， 並且回傳 value
 
+## 參考別人實作發現
+
+首先是如果使用 Map , 每次插入順序預後面輸入的則在越後面
+
+所以基本上原來用來存放 key value的 Pair 可以不需要透過 list 來做儲存
+
+所以順序上可以這樣做 預後面放的愈晚刪除，也就是每次只刪除最前面的值
+
+所以變成每次去取值時，如果存在 Map ， 則先刪除再輸入 Map 則樣順序就會保持在最後刪除
+
+否則就直接輸入再最後面
+
+每次輸入值，檢查是否已經存在，如果不存在 就透過 iterator 把最前面的值刪除（最少存取）
+
+如果已經存在 ， 則先刪除再輸入 Map
+
+## 最新版實作
+
+```typescript
+export default class LRUCacheV2 {
+  private capacity: number;
+  private cacheMap: Map<number, number>;
+  constructor(capacity: number) {
+    this.capacity = capacity;
+    this.cacheMap = new Map<number, number>();
+  }
+  get(key: number): number {
+    const value = this.cacheMap.get(key);
+    if (value === undefined) return -1;
+    // small hack to re-order by remove origin key and insert new key
+    this.cacheMap.delete(key);
+    this.cacheMap.set(key, value);
+    return value;
+  }
+  put(key: number, value: number): void {
+    if (this.cacheMap.size >= this.capacity && !this.cacheMap.has(key)) {
+      const targetKey = this.cacheMap.keys().next().value;   
+      this.cacheMap.delete(targetKey);
+    }
+    this.cacheMap.delete(key);
+    this.cacheMap.set(key, value);
+  }
+}
+```
 ## 實作
 ### Pair
 
